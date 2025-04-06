@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models/todo_model.dart';
+import 'package:todo_app/provider/theme_provider.dart';
 import 'package:todo_app/provider/todo_provider.dart';
 import 'package:todo_app/utils/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -34,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
           titlePadding: EdgeInsets.all(16.0),
           title: Text(
             'Create New Task',
-            style: Theme.of(context).textTheme.displayLarge,
+            style: AppTextStyles.displayLarge(context),
           ),
           content: SizedBox(
             width: MediaQuery.sizeOf(context).width,
@@ -42,13 +43,13 @@ class _HomeScreenState extends State<HomeScreen> {
               controller: todoTitleController,
               decoration: InputDecoration(
                 hintText: 'Enter Todo Title',
-                hintStyle: Theme.of(context).textTheme.bodyMedium,
+                hintStyle: AppTextStyles.bodyMedium(context),
                 border: OutlineInputBorder(
                   borderSide: BorderSide(color: AppColors.bgColor),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: AppTextStyles.bodyMedium(context),
             ),
           ),
 
@@ -91,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
           titlePadding: EdgeInsets.all(16.0),
           title: Text(
             'Update Task',
-            style: Theme.of(context).textTheme.displayLarge,
+            style: AppTextStyles.displayLarge(context),
           ),
           content: SizedBox(
             width: MediaQuery.sizeOf(context).width,
@@ -99,13 +100,13 @@ class _HomeScreenState extends State<HomeScreen> {
               controller: tempController,
               decoration: InputDecoration(
                 hintText: 'Enter Todo Title',
-                hintStyle: Theme.of(context).textTheme.bodyMedium,
+                hintStyle: AppTextStyles.bodyMedium(context),
                 border: OutlineInputBorder(
                   borderSide: BorderSide(color: AppColors.bgColor),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: AppTextStyles.bodyMedium(context),
             ),
           ),
 
@@ -138,10 +139,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final todoProvider = context.watch<TodoProvider>();
+    final themeProvider = Provider.of<ThemeProvider>(context);
     List<TodoModel> todoList = todoProvider.getAllTodoTask();
 
     return Scaffold(
-      backgroundColor: AppColors.whiteColor,
+      backgroundColor:
+          themeProvider.isDarkMode
+              ? AppColors.darkThemeBlackColor
+              : AppColors.whiteColor,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,11 +163,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(
                         'Hello Friend 👋',
-                        style: Theme.of(context).textTheme.titleLarge,
+                        style: AppTextStyles.titleLarge(context),
                       ),
-                      Icon(
-                        Icons.dark_mode_outlined,
-                        color: AppColors.blackColor,
+                      IconButton(
+                        icon: Icon(Icons.dark_mode_outlined),
+                        onPressed: () => themeProvider.toggleTheme(),
                       ),
                     ],
                   ),
@@ -170,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   Text(
                     'Ready to do your Daily Tasks ??',
-                    style: Theme.of(context).textTheme.displayLarge,
+                    style: AppTextStyles.displayLarge(context),
                     softWrap: true,
                     overflow: TextOverflow.clip,
                   ),
@@ -184,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           children: [
                             TextSpan(
                               text: 'Today\'s ',
-                              style: Theme.of(context).textTheme.bodyMedium,
+                              style: AppTextStyles.bodyMedium(context),
                             ),
                             TextSpan(
                               text: day,
@@ -203,9 +208,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       Text(
                         date,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.geryColor,
-                        ),
+                        style: AppTextStyles.bodySmall(
+                          context,
+                        ).copyWith(color: AppColors.geryColor),
                       ),
                     ],
                   ),
@@ -227,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Text(
                         'Ongoing',
-                        style: Theme.of(context).textTheme.displayLarge,
+                        style: AppTextStyles.displayLarge(context),
                         softWrap: true,
                         overflow: TextOverflow.clip,
                       ),
@@ -262,7 +267,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8.0),
                                 boxShadow: [
-                                  BoxShadow(color: AppColors.bgColor),
+                                  BoxShadow(
+                                    color:
+                                        themeProvider.isDarkMode
+                                            ? AppColors.darkThemeBgColor
+                                            : AppColors.bgColor,
+                                  ),
                                 ],
                               ),
                               child: Row(
@@ -275,7 +285,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       todoList[index].todoTitle,
                                       style: GoogleFonts.roboto(
                                         textStyle: TextStyle(
-                                          color: AppColors.blackColor,
+                                          color:
+                                              themeProvider.isDarkMode
+                                                  ? AppColors
+                                                      .darkThemeWhiteColor
+                                                  : AppColors.blackColor,
                                           fontSize: 20,
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -292,9 +306,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         height: 48,
                                         width: 48,
                                         decoration: BoxDecoration(
-                                          color: AppColors.blueColor.withValues(
-                                            alpha: 32,
-                                          ),
+                                          color:
+                                              themeProvider.isDarkMode
+                                                  ? AppColors.darkThemeBlueColor
+                                                  : AppColors.blueColor
+                                                      .withValues(alpha: 32),
                                           borderRadius: BorderRadius.circular(
                                             8.0,
                                           ),
@@ -305,7 +321,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           },
                                           icon: Icon(
                                             Icons.mode_edit_outlined,
-                                            color: AppColors.bgColor,
+                                            color:
+                                                themeProvider.isDarkMode
+                                                    ? AppColors.darkThemeBgColor
+                                                    : AppColors.bgColor,
                                           ),
                                         ),
                                       ),
@@ -314,9 +333,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         height: 48,
                                         width: 48,
                                         decoration: BoxDecoration(
-                                          color: AppColors.redColor.withValues(
-                                            alpha: 24,
-                                          ),
+                                          color:
+                                              themeProvider.isDarkMode
+                                                  ? AppColors.darkThemeRedColor
+                                                  : AppColors.redColor
+                                                      .withValues(alpha: 24),
                                           borderRadius: BorderRadius.circular(
                                             8.0,
                                           ),
@@ -327,7 +348,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           },
                                           icon: Icon(
                                             Icons.delete_outline,
-                                            color: AppColors.bgColor,
+                                            color:
+                                                themeProvider.isDarkMode
+                                                    ? AppColors.darkThemeBgColor
+                                                    : AppColors.bgColor,
                                           ),
                                         ),
                                       ),
@@ -347,7 +371,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 240,
                             width: 240,
                             fit: BoxFit.cover,
-                            opacity: AlwaysStoppedAnimation(0.25),
+                            opacity:
+                                themeProvider.isDarkMode
+                                    ? AlwaysStoppedAnimation(0.8)
+                                    : AlwaysStoppedAnimation(0.25),
                           ),
                         ),
                       ),
@@ -363,8 +390,14 @@ class _HomeScreenState extends State<HomeScreen> {
           // );
           createTodo();
         },
-        backgroundColor: AppColors.blueColor,
-        foregroundColor: AppColors.whiteColor,
+        backgroundColor:
+            themeProvider.isDarkMode
+                ? AppColors.darkThemeBlueColor
+                : AppColors.blueColor,
+        foregroundColor:
+            themeProvider.isDarkMode
+                ? AppColors.darkThemeWhiteColor
+                : AppColors.whiteColor,
         child: Icon(Icons.add),
       ),
     );
