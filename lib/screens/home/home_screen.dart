@@ -118,10 +118,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             MaterialButton(
               onPressed: () {
-                context.read<TodoProvider>().createTodoTask(
-                  todoTitleController.text,
+                context.read<TodoProvider>().updateTodoTask(
+                  index,
+                  tempController.text,
                 );
-                todoTitleController.clear();
+                tempController.clear();
                 Navigator.pop(context);
               },
               color: AppColors.blueColor,
@@ -255,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           final todo = todoList[index];
 
                           return Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
                             child: Container(
                               padding: EdgeInsets.all(8.0),
                               decoration: BoxDecoration(
@@ -269,17 +270,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    todoList[index].todoTitle,
-                                    style: GoogleFonts.roboto(
-                                      textStyle: TextStyle(
-                                        color: AppColors.blackColor,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w500,
+                                  Expanded(
+                                    child: Text(
+                                      todoList[index].todoTitle,
+                                      style: GoogleFonts.roboto(
+                                        textStyle: TextStyle(
+                                          color: AppColors.blackColor,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 3,
                                     ),
-                                    softWrap: true,
-                                    overflow: TextOverflow.clip,
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
@@ -297,7 +300,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                         child: IconButton(
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            updateTodo(index, todo.todoTitle);
+                                          },
                                           icon: Icon(
                                             Icons.mode_edit_outlined,
                                             color: AppColors.bgColor,

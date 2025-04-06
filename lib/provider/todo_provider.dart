@@ -15,6 +15,7 @@ class TodoProvider extends ChangeNotifier {
 
   void updateTodoTask(int index, String data) {
     HiveService().updateTodo(index, TodoModel(todoTitle: data));
+    notifyListeners();
   }
 
   void deleteAllTodo() {}
